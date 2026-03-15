@@ -1,0 +1,89 @@
+## .gitignore for Visual Studio, .NET Core and Entity Framework Core
+
+# Visual Studio 2015 and above
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build Results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleaseMinDependency/
+[Xx]86/
+[Xx]64/
+[Bb]uild/
+bld/
+**/[Bb]in/
+**/[Oo]bj/
+[Ll]og/
+
+# .NET Core
+project.lock.json
+project.assets.json
+*.nuget.props
+*.nuget.targets
+.vs/
+.vscode/
+
+# Package files
+*.nupkg
+*.snupkg
+*.vstemplate
+*.vsix
+*.trx
+*.mdmp
+*.log
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+Build.db
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userproj
+*.sln.docstates
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Rider (JetBrains)
+.idea/
+*.sln.iml
+
+# Resharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# Visual Studio files
+.vs/
+
+# SQLite databases (if using SQLite for local dev)
+*.db
+*.db-shm
+*.db-wal
+
+/BlazorClienteApp/BlazorClienteApp.Client/obj/**
+/BlazorClienteApp/BlazorClienteApp.Client/bin/**
+
+/BlazorClienteApp/BlazorClienteApp.Server/obj/**
+/BlazorClienteApp/BlazorClienteApp.Server/bin/**
+
+.obj/**
+.bin/**
+
+# Local environment variables
+.env
+.env.local

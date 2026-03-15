@@ -1,0 +1,41 @@
+﻿@page "/login"
+@inject NavigationManager Navigation
+@inject AuthService AuthService
+@inject ClienteService ClienteService
+
+<h3>Login</h3>
+
+<div>
+    <label>Username:</label>
+    <input @bind="username" />
+</div>
+<div>
+    <label>Password:</label>
+    <input type="password" @bind="password" />
+</div>
+<button @onclick="PerformLogin">Login</button>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <p style="color:red">@errorMessage</p>
+}
+
+@code {
+    private string username;
+    private string password;
+    private string errorMessage;
+
+    private async Task PerformLogin()
+    {
+        var token = await AuthService.LoginAsync(username, password);
+        if (token != null)
+        {
+            ClienteService.SetToken(token);
+            Navigation.NavigateTo("/");
+        }
+        else
+        {
+            errorMessage = "Invalid username or password";
+        }
+    }
+}

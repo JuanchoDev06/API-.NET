@@ -1,0 +1,121 @@
+﻿@page "/clientes1"
+@inject ClienteService ClienteService
+@inject AuthService AuthService
+
+<h3>Clientes</h3>
+
+@if (!isAuthenticated)
+{
+    <p style="color:red">Usuario no autenticado. Por favor, inicie sesión.</p>
+}
+else if (clientes == null)
+{
+    <p><em>Cargando...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nit</th>
+                <th>Nombre</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cliente in clientes)
+            {
+                <tr>
+                    <td>@cliente.Id</td>
+                    <td>@cliente.Nit</td>
+                    <td>@cliente.Nombre</td>
+                    <td>
+                        <button @onclick="() => EditCliente(cliente)">Editar</button>
+                        <button @onclick="() => DeleteCliente(cliente.Id)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<h3>@(editMode ? "Editar Cliente" : "Crear Cliente")</h3>
+<EditForm Model="@cliente" OnValidSubmit="SaveCliente">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label>Nit:</label>
+        <InputText @bind-Value="cliente.Nit" />
+    </div>
+    <div>
+        <label>Nombre:</label>
+        <InputText @bind-Value="cliente.Nombre" />
+    </div>
+
+    <button type="submit">Guardar</button>
+    <button type="button" @onclick="CancelEdit">Cancelar</button>
+</EditForm>
+
+@code {
+
+    private List<BlazorClienteApp.Client.Models.Cliente>? clientes;
+    private BlazorClienteApp.Client.Models.Cliente cliente = new BlazorClienteApp.Client.Models.Cliente();
+    private bool editMode = false;
+    private bool isAuthenticated = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isAuthenticated = AuthService.IsTokenValid();
+        if (isAuthenticated)
+        {
+            clientes = await ClienteService.GetClientesAsync();
+        }
+    }
+
+    private async Task SaveCliente()
+    {
+        if (editMode)
+        {
+            await ClienteService.UpdateClienteAsync(cliente.Id, cliente);
+        }
+        else
+        {
+            try
+            {
+
+                cliente.Id = 22;
+                await ClienteService.CreateClienteAsync(cliente);
+            }
+            catch (Exception ex)
+            {
+                
+                throw ex;
+            }
+        }
+
+        clientes = await ClienteService.GetClientesAsync();
+        cliente = new BlazorClienteApp.Client.Models.Cliente();
+        editMode = false;
+    }
+
+    private void EditCliente(BlazorClienteApp.Client.Models.Cliente clienteToEdit)
+    {
+        cliente = clienteToEdit;
+        editMode = true;
+    }
+
+    private async Task DeleteCliente(int id)
+    {
+        await ClienteService.DeleteClienteAsync(id);
+        clientes = await ClienteService.GetClientesAsync();
+    }
+
+    private void CancelEdit()
+    {
+        cliente = new BlazorClienteApp.Client.Models.Cliente();
+        editMode = false;
+    }
+}
+

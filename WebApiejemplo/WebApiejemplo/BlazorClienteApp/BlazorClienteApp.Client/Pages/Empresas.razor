@@ -1,0 +1,111 @@
+﻿@page "/empresas"
+@inject EmpresaService EmpresaService
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+
+<h3>Empresas</h3>
+
+@if (!isAuthenticated)
+{
+    <p style="color:red">Usuario no autenticado. Redirigiendo a la página de login...</p>
+}
+else if (empresas == null)
+{
+    <p><em>Cargando...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id Empresa</th>
+                <th>Nombre Empresa</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var empresa in empresas)
+            {
+                <tr>
+                    <td>@empresa.IdEmpresa</td>
+                    <td>@empresa.NombreEmpresa</td>
+                    <td>
+                        <button @onclick="() => EditEmpresa(empresa)">Editar</button>
+                        <button @onclick="() => DeleteEmpresa(empresa.IdEmpresa)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<h3>@(editMode ? "Editar Empresa" : "Crear Empresa")</h3>
+<EditForm Model="@empresa" OnValidSubmit="SaveEmpresa">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label>Nombre Empresa:</label>
+        <InputText @bind-Value="empresa.NombreEmpresa" />
+    </div>
+
+    <button type="submit">Guardar</button>
+    <button type="button" @onclick="CancelEdit">Cancelar</button>
+</EditForm>
+
+@code {
+
+    private List<BlazorClienteApp.Client.Models.Empresa>? empresas;
+    private BlazorClienteApp.Client.Models.Empresa empresa = new BlazorClienteApp.Client.Models.Empresa();
+    private bool editMode = false;
+    private bool isAuthenticated = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isAuthenticated = AuthService.IsTokenValid();
+        if (!isAuthenticated)
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        empresas = await EmpresaService.GetEmpresasAsync();
+    }
+
+    private async Task SaveEmpresa()
+    {
+        if (editMode)
+        {
+            await EmpresaService.UpdateEmpresaAsync(empresa.IdEmpresa, empresa);
+        }
+        else
+        {
+
+            empresa.IdEmpresa = 22;
+            await EmpresaService.CreateEmpresaAsync(empresa);
+        }
+
+        empresas = await EmpresaService.GetEmpresasAsync();
+        empresa = new BlazorClienteApp.Client.Models.Empresa();
+        editMode = false;
+    }
+
+    private void EditEmpresa(BlazorClienteApp.Client.Models.Empresa empresaToEdit)
+    {
+        empresa = empresaToEdit;
+        editMode = true;
+    }
+
+    private async Task DeleteEmpresa(int id)
+    {
+        await EmpresaService.DeleteEmpresaAsync(id);
+        empresas = await EmpresaService.GetEmpresasAsync();
+    }
+
+    private void CancelEdit()
+    {
+        empresa = new BlazorClienteApp.Client.Models.Empresa();
+        editMode = false;
+    }
+}
+
