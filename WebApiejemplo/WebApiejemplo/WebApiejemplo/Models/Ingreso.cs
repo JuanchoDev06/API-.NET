@@ -30,8 +30,7 @@ namespace WebApiejemplo.Models
         [Required]
         public int UsuarioId { get; set; }
 
-        [Required]
-        public int UnidadId { get; set; }
+        public int? UnidadId { get; set; }
 
         [ForeignKey("UsuarioId")]
         public virtual Usuario? Vigilante { get; set; }

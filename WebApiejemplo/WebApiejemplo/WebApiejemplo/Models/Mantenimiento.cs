@@ -24,6 +24,9 @@ namespace WebApiejemplo.Models
         [MaxLength(300)]
         public string? Descripcion { get; set; }
 
+        [MaxLength(30)]
+        public string? Estado { get; set; } = "Pendiente";
+
         [Column(TypeName = "decimal(12, 2)")]
         public decimal? Costo { get; set; }
 

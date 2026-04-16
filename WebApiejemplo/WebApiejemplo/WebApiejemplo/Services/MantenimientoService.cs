@@ -43,6 +43,7 @@ namespace WebApiejemplo.Services
             existing.Descripcion = entity.Descripcion;
             existing.Costo = entity.Costo;
             existing.ZonaComunId = entity.ZonaComunId;
+            existing.Estado = entity.Estado;
 
             _context.Mantenimientos.Update(existing);
             await _context.SaveChangesAsync();
