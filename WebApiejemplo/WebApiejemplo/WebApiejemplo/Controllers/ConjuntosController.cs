@@ -7,7 +7,7 @@ using WebApiejemplo.Services;
 
 namespace WebApiejemplo.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Administrador")]
     [Route("api/[controller]")]
     [ApiController]
     public class ConjuntosController : ControllerBase

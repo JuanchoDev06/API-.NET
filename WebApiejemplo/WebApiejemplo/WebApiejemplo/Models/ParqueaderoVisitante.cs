@@ -23,8 +23,7 @@ namespace WebApiejemplo.Models
 
         public DateTime? FechaHoraSalida { get; set; }
 
-        [Required]
-        public int IngresoId { get; set; }
+        public int? IngresoId { get; set; }
 
         [ForeignKey("ParqueaderoId")]
         public virtual Parqueadero? Parqueadero { get; set; }

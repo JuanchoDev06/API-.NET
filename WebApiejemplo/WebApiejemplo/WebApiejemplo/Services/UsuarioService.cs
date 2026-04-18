@@ -17,12 +17,22 @@ namespace WebApiejemplo.Services
 
         public async Task<IEnumerable<Usuario>> GetAllAsync()
         {
-            return await _context.Usuarios.Include(u => u.Rol).ToListAsync();
+            return await _context.Usuarios
+                .Include(u => u.Rol)
+                .Include(u => u.ResidentesUnidad)
+                    .ThenInclude(ru => ru.Unidad)
+                        .ThenInclude(a => a.Torre)
+                .ToListAsync();
         }
 
         public async Task<Usuario?> GetByIdAsync(int id)
         {
-            return await _context.Usuarios.Include(u => u.Rol).FirstOrDefaultAsync(u => u.UsuarioId == id);
+            return await _context.Usuarios
+                .Include(u => u.Rol)
+                .Include(u => u.ResidentesUnidad)
+                    .ThenInclude(ru => ru.Unidad)
+                        .ThenInclude(a => a.Torre)
+                .FirstOrDefaultAsync(u => u.UsuarioId == id);
         }
 
         public async Task<Usuario> CreateAsync(Usuario entity)
@@ -36,7 +46,6 @@ namespace WebApiejemplo.Services
         {
             var existing = await _context.Usuarios.FindAsync(id);
             if (existing == null) return null;
-
             existing.RolId = entity.RolId;
             existing.Nombre = entity.Nombre;
             existing.Documento = entity.Documento;
@@ -44,7 +53,6 @@ namespace WebApiejemplo.Services
             existing.Telefono = entity.Telefono;
             existing.Activo = entity.Activo;
             existing.PasswordHash = entity.PasswordHash;
-
             _context.Usuarios.Update(existing);
             await _context.SaveChangesAsync();
             return existing;
@@ -54,7 +62,6 @@ namespace WebApiejemplo.Services
         {
             var entity = await _context.Usuarios.FindAsync(id);
             if (entity == null) return false;
-
             _context.Usuarios.Remove(entity);
             await _context.SaveChangesAsync();
             return true;

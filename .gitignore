@@ -87,3 +87,4 @@ _ReSharper*/
 # Local environment variables
 .env
 .env.local
+**/appsettings.json

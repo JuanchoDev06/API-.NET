@@ -7,7 +7,7 @@ using WebApiejemplo.Services;
 
 namespace WebApiejemplo.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Administrador,Vigilante,Residente,Propietario,Inquilino")]
     [Route("api/[controller]")]
     [ApiController]
     public class ReservasController : ControllerBase
