@@ -38,6 +38,8 @@ builder.Services.AddScoped<IParqueaderoService, ParqueaderoService>();
 builder.Services.AddScoped<IIngresoService, IngresoService>();
 builder.Services.AddScoped<IMensajeriaService, MensajeriaService>();
 builder.Services.AddScoped<IParqueaderoVisitanteService, ParqueaderoVisitanteService>();
+builder.Services.AddScoped<ReporteService>();
+
 
 // Configuración de JWT
 builder.Services.AddAuthentication("Bearer")
@@ -87,6 +89,8 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+
+QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
