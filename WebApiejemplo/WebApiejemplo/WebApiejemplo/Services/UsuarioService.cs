@@ -60,11 +60,20 @@ namespace WebApiejemplo.Services
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var entity = await _context.Usuarios.FindAsync(id);
-            if (entity == null) return false;
-            _context.Usuarios.Remove(entity);
+            var usuario = await _context.Usuarios.FindAsync(id);
+            if (usuario == null) return false;
+
+            // Primero eliminar las relaciones en ResidentesUnidad
+            var relaciones = _context.ResidentesUnidad
+                .Where(ru => ru.UsuarioId == id);
+            _context.ResidentesUnidad.RemoveRange(relaciones);
+
+            // Ahora sí eliminar el usuario
+            _context.Usuarios.Remove(usuario);
             await _context.SaveChangesAsync();
             return true;
         }
+
+
     }
 }
