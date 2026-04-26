@@ -22,6 +22,7 @@ namespace WebApiejemplo.Data
         public DbSet<Ingreso> Ingresos { get; set; }
         public DbSet<Mensajeria> Mensajerias { get; set; }
         public DbSet<ParqueaderoVisitante> ParqueaderosVisitantes { get; set; }
+        public DbSet<CuartoUtil> CuartosUtil { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,7 +40,10 @@ namespace WebApiejemplo.Data
             modelBuilder.Entity<Ingreso>().Property(i => i.FechaHoraIngreso).HasDefaultValueSql("GETDATE()");
             modelBuilder.Entity<Mensajeria>().Property(m => m.FechaRecepcion).HasDefaultValueSql("GETDATE()");
             modelBuilder.Entity<ParqueaderoVisitante>().Property(p => p.FechaHoraIngreso).HasDefaultValueSql("GETDATE()");
-
+            modelBuilder.Entity<CuartoUtil>()
+                .HasIndex(c => c.Numero)
+                .IsUnique()
+                .HasDatabaseName("UQ_CuartoUtil_Numero");
             // Comportamiento de delete: FK opcionales -> SetNull; obligatorias -> Restrict
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {

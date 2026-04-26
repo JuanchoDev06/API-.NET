@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApiejemplo.Data;
 
@@ -11,9 +12,11 @@ using WebApiejemplo.Data;
 namespace WebApiejemplo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260419220619_initt")]
+    partial class initt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -112,37 +115,6 @@ namespace WebApiejemplo.Migrations
                     b.HasKey("ConjuntoId");
 
                     b.ToTable("Conjunto");
-                });
-
-            modelBuilder.Entity("WebApiejemplo.Models.CuartoUtil", b =>
-                {
-                    b.Property<int>("CuartoUtilId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CuartoUtilId"));
-
-                    b.Property<string>("Descripcion")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Numero")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<int?>("UnidadId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CuartoUtilId");
-
-                    b.HasIndex("Numero")
-                        .IsUnique()
-                        .HasDatabaseName("UQ_CuartoUtil_Numero");
-
-                    b.HasIndex("UnidadId");
-
-                    b.ToTable("CuartosUtil");
                 });
 
             modelBuilder.Entity("WebApiejemplo.Models.Ingreso", b =>
@@ -280,10 +252,6 @@ namespace WebApiejemplo.Migrations
 
                     b.Property<string>("Numero")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("Placa")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
@@ -564,16 +532,6 @@ namespace WebApiejemplo.Migrations
                         .IsRequired();
 
                     b.Navigation("Vigilante");
-                });
-
-            modelBuilder.Entity("WebApiejemplo.Models.CuartoUtil", b =>
-                {
-                    b.HasOne("WebApiejemplo.Models.Apartamentos", "Unidad")
-                        .WithMany()
-                        .HasForeignKey("UnidadId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Unidad");
                 });
 
             modelBuilder.Entity("WebApiejemplo.Models.Ingreso", b =>
