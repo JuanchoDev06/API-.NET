@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using WebApiejemplo.Models;
 using WebApiejemplo.Services;
@@ -56,5 +57,32 @@ namespace WebApiejemplo.Controllers
             if (!deleted) return NotFound();
             return NoContent();
         }
+
+        [Authorize(Roles = "Administrador")]
+        [HttpPut("{id}/asignar")]
+        public async Task<ActionResult> Asignar(int id, [FromBody] AsignarParqueaderoRequest request)
+        {
+            var (success, error) = await _service.AsignarAsync(id, request.UnidadId, request.Placa);
+            if (!success) return BadRequest(new { mensaje = error });
+            return Ok(new { mensaje = "Cupo asignado correctamente." });
+        }
+
+        [Authorize(Roles = "Administrador")]
+        [HttpPut("{id}/desasignar")]
+        public async Task<ActionResult> Desasignar(int id)
+        {
+            var (success, error) = await _service.DesasignarAsync(id);
+            if (!success) return BadRequest(new { mensaje = error });
+            return Ok(new { mensaje = "Cupo liberado correctamente." });
+        }
+    }
+
+    public class AsignarParqueaderoRequest
+    {
+        [Required]
+        public int UnidadId { get; set; }
+
+        [MaxLength(20)]
+        public string? Placa { get; set; }
     }
 }

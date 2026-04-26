@@ -20,6 +20,9 @@ namespace WebApiejemplo.Models
 
         public int? UnidadId { get; set; }
 
+        [MaxLength(20)]
+        public string? Placa { get; set; }
+
         [ForeignKey("UnidadId")]
         public virtual Apartamentos? Unidad { get; set; }
     }

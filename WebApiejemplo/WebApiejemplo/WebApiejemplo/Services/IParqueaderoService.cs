@@ -11,5 +11,7 @@ namespace WebApiejemplo.Services
         Task<Parqueadero> CreateAsync(Parqueadero entity);
         Task<Parqueadero?> UpdateAsync(int id, Parqueadero entity);
         Task<bool> DeleteAsync(int id);
+        Task<(bool success, string error)> AsignarAsync(int id, int unidadId, string? placa);
+        Task<(bool success, string error)> DesasignarAsync(int id);
     }
 }

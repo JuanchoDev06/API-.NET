@@ -40,10 +40,41 @@ namespace WebApiejemplo.Services
             existing.Tipo = entity.Tipo;
             existing.Numero = entity.Numero;
             existing.UnidadId = entity.UnidadId;
+            existing.Placa = entity.Placa;
 
             _context.Parqueaderos.Update(existing);
             await _context.SaveChangesAsync();
             return existing;
+        }
+
+        public async Task<(bool success, string error)> AsignarAsync(int id, int unidadId, string? placa)
+        {
+            var parqueadero = await _context.Parqueaderos.FindAsync(id);
+            if (parqueadero == null)
+                return (false, "Parqueadero no encontrado.");
+
+            if (parqueadero.UnidadId.HasValue)
+                return (false, "El cupo ya está asignado a otro apartamento.");
+
+            parqueadero.UnidadId = unidadId;
+            parqueadero.Placa = placa;
+            await _context.SaveChangesAsync();
+            return (true, string.Empty);
+        }
+
+        public async Task<(bool success, string error)> DesasignarAsync(int id)
+        {
+            var parqueadero = await _context.Parqueaderos.FindAsync(id);
+            if (parqueadero == null)
+                return (false, "Parqueadero no encontrado.");
+
+            if (!parqueadero.UnidadId.HasValue)
+                return (false, "El cupo no está asignado a ningún apartamento.");
+
+            parqueadero.UnidadId = null;
+            parqueadero.Placa = null;
+            await _context.SaveChangesAsync();
+            return (true, string.Empty);
         }
 
         public async Task<bool> DeleteAsync(int id)
